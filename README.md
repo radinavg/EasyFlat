@@ -1,12 +1,12 @@
-# EasyFlat
+# EasyFlat 🏠
 
 EasyFlat is a comprehensive solution designed to enhance shared living experiences by providing tools for organization, finance tracking, meal planning, and household task management. Whether you need to manage groceries, split expenses, or coordinate chores, EasyFlat streamlines the process.
 
-## About the Project
+## About the Project 📌
 
-This project was developed as part of a university coursework assignment, following Agile principles, specifically the SCRUM methodology. Our team worked under the guidance of academic advisors to ensure an efficient and scalable solution for communal living.
+This group project was developed as part of a Software Engineering and Project Management course at TU Wien, following Agile principles, specifically the SCRUM methodology. Our team worked under the guidance of academic advisors to ensure an efficient and scalable solution for communal living.
 
-## Features
+## Features 🚀
 
 ### Digital Storage
 - Maintain a virtual inventory of kitchen supplies.
@@ -18,7 +18,7 @@ This project was developed as part of a university coursework assignment, follow
 
 ### Recipe Suggestions
 - Get personalized recipe recommendations based on available ingredients.
-- Integrated with an external database for diverse meal options.
+- Integrated with an external database (API) for diverse meal options.
 
 ### Expense Tracking
 - Record and split household expenses.
@@ -36,7 +36,7 @@ This project was developed as part of a university coursework assignment, follow
 - Easily manage user access and permissions.
 - Secure and organized group coordination.
 
-## Technology Stack
+## Technology Stack 🛠️
 
 ### Frontend
 - Angular for a dynamic and interactive UI
@@ -54,16 +54,16 @@ This project was developed as part of a university coursework assignment, follow
 - REST API for seamless frontend-backend communication
 - JUnit 5 & Mockito for testing
 
-## Development Process
+## Development Process 🔄
 
 Using Agile methodologies, the team followed structured sprints, daily stand-ups, and iterative feedback integration to refine the product continuously.
 
-## Installation Guide
+## Installation Guide 📥
 
 ### Frontend Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/IAndreev1/EasyFlat.git
+   git clone https://github.com/radinavg/EasyFlat.git
    ```
 2. Navigate to the frontend directory:
    ```bash
@@ -94,15 +94,14 @@ Using Agile methodologies, the team followed structured sprints, daily stand-ups
    ```
    The backend will be accessible at [http://localhost:8080](http://localhost:8080).
 
-## Testing & Quality Assurance
+## Testing & Quality Assurance ✅
 
 To ensure reliability, the application undergoes extensive testing:
 - Unit Testing with JUnit 5 and Mockito
 - Integration Testing for component interactions
 - Test-Driven Development (TDD) principles
 
-## Get Started
+## Get Started 🎉
 
 Clone the repository, set up the environment, and experience a more organized and efficient approach to shared living.
 
-# EasyFlat
