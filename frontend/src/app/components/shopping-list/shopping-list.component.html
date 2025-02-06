@@ -1,0 +1,154 @@
+<div class="container">
+
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h1 class="display-4">{{shoppingList?.name}}</h1>
+    </div>
+    <div class="col mt-4 text-end">
+      <button type="submit"
+              class="btn btn-secondary ms-auto bi-arrow-left"
+              [routerLink]="['/shopping-lists']"
+      >
+        Back
+      </button>
+    </div>
+  </div>
+
+  <div class="custom-header-border"></div>
+
+  <form class="d-flex flex-row w-auto mb-3">
+
+    <div class="ms-1" style="margin-right: 4px;">
+      <label class="col-form-label">
+        List
+      </label>
+      <select class="form-select"
+              name="selectedShoppingList"
+              [(ngModel)]="selectedShoppingListId"
+              (change)="onShoppingListChange()">
+        <ng-container *ngIf="!selectedShoppingListId">
+          <option value="" disabled selected hidden>Select Shopping List</option>
+        </ng-container>
+        <option *ngFor="let list of shoppingLists" [value]="list.id">
+          {{ list.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="flex-grow-1">
+      <label for="searchProduct" class="col-form-label">
+        Product
+      </label>
+      <input type="text" id="searchProduct" name="searchProduct"
+             class="form-control"
+             [(ngModel)]="searchParams.productName"
+             (ngModelChange)="getItems()">
+    </div>
+
+    <div class="ms-1">
+      <label for="searchLabel" class="col-form-label">
+        Label
+      </label>
+      <input type="text" id="searchLabel" name="searchLabel"
+             class="form-control"
+             [(ngModel)]="searchParams.label"
+             (ngModelChange)="getItems()">
+    </div>
+
+  </form>
+
+  <div class="text-end ms-3 mb-3" style="margin-bottom: 10px">
+    <button type="button"
+            class="btn btn-primary"
+            (click)="navigateToCreateItem()">
+      <i class="bi bi-plus-square"></i>
+      Add Item
+    </button>
+  </div>
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Category</th>
+      <th scope="col">Labels</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Actions</th>
+      <th scope="col">Mark</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of items">
+      <td>{{ item.productName}}</td>
+      <td>{{ item.generalName}}</td>
+      <td class="d-none d-md-table-cell">
+        <span *ngFor="let label of item.labels; let isLast = last">
+          <span style="font-weight: bold" [style.color]="label.labelColour">{{ label.labelValue }}</span>
+          <ng-container *ngIf="!isLast">, </ng-container>
+        </span>
+      </td>
+      <td class="d-none d-md-table-cell">{{ item.quantityCurrent}} {{item.unit?.name}}</td>
+      <td>
+        <a *ngIf="item.productName !== null" (click)="navigateToEditItem(item.itemId + '')"
+           class="btn btn-sm btn-warning">
+          <i class="bi bi-pencil">Edit</i>
+        </a>
+      </td>
+      <td>
+        <input type="checkbox" [checked]="item.check" (change)="updateCheckedItems(item)">
+      </td>
+    </tr>
+
+    <td colspan="6" *ngIf="items.length === 0" style="text-align: center;">
+      <h3>No shopping items found!</h3>
+    </td>
+
+    </tbody>
+  </table>
+
+  <button *ngIf="!checkId()"
+          type="button"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModalForList(shoppingList) "
+  >
+    <i class="bi bi-trash"></i>
+    Delete List
+  </button>
+
+  <button *ngIf="!checkIsEmpty()"
+          data-bs-toggle="modal"
+          [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModalForChecked(this.checkedItems)"
+          style="margin-top: 30px; margin-right: 20px;" type="button" class="btn btn-danger bi-trash m-3"
+          >Delete
+  </button>
+
+  <button *ngIf="!checkIsEmpty()"
+          style="margin-top: 30px; margin-right: 20px;" type="button" class="btn btn-info  m-3"
+          (click)="transferToStorage()">Bought
+  </button>
+
+  <button *ngIf="!checkIsEmpty()"
+          data-bs-toggle="modal"
+          [attr.data-bs-target]="'#createExpenseFromShopModal'"
+          style="margin-top: 30px; margin-right: 20px;" type="button" class="btn btn-success  m-3">
+    Add to finance
+  </button>
+
+  <app-create-expense-from-shop [checkedShoppingItems]="checkedItems"></app-create-expense-from-shop>
+
+  <app-confirm-delete-dialog
+    [deleteInfo]="'Shopping List'"
+    [deleteName]="truncateString(shoppingList.name, 20)"
+    [deleteId]="shoppingList.id.toString()"
+    (confirm)="deleteList()"
+  ></app-confirm-delete-dialog>
+
+  <app-confirm-delete-dialog
+    [deleteInfo]="'checked'"
+    [deleteName]="'items'"
+    [deleteId]="'-1243'"
+    (confirm)="deleteCheckedItems()"
+  ></app-confirm-delete-dialog>
+
+</div>

@@ -1,0 +1,107 @@
+<div class="container">
+  <div class="row">
+    <div class="col col-8">
+      <h1 class="display-4">Expense Details</h1>
+    </div>
+    <div class="col mt-4">
+      <button type="button"
+              class="btn btn-primary me-2"
+              [routerLink]="['../edit']"
+              aria-label="Edit item"
+      >
+        <i class="bi bi-pencil"></i>
+        Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger me-2"
+              data-bs-toggle="modal"
+              [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(expense)"
+              aria-label="Delete item"
+      >
+        <i class="bi bi-trash"></i>
+        Delete
+      </button>
+      <button type="button" class="btn btn-secondary" [routerLink]="[previousUrl]">
+        <i class="bi bi-arrow-left"></i>
+        Back
+      </button>
+    </div>
+  </div>
+
+  <app-confirm-delete-dialog
+    deleteInfo="finance entry"
+    [deleteName]="expense.title !== null ? expense.title : ''"
+    [deleteId]="expense.id !== null ? expense.id.toString() : null"
+    (confirm)="delete()">
+  </app-confirm-delete-dialog>
+
+  <div class="custom-header-border mb-2"></div>
+
+  <div class="product-details">
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Title</label>
+      <div class="col-md-10 col-lg-8">
+        {{ expense.title }} <span *ngIf="expense.addedViaStorage" class="badge me-2 bg-success">Added by System</span>
+      </div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Description</label>
+      <div class="col-md-10 col-lg-8">{{ expense.description }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Amount</label>
+      <div class="col-md-10 col-lg-8">{{ formatAmount(SplitBy.EQUAL, expense.amountInCents) }} €</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Date</label>
+      <div class="col-md-10 col-lg-8">{{ expense.createdAt | date: 'MMM dd, yyyy HH:mm' }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Repeating</label>
+      <div class="col-md-8 col-lg-5 d-flex align-items-center">
+        <span *ngIf="expense.repeatingExpenseType !== null" class="badge me-2 bg-success">
+          {{ formatRepeatingExpenseType(expense.repeatingExpenseType) }}
+        </span>
+        <span *ngIf="expense.periodInDays !== null" class="badge me-2 bg-success">
+          every {{ expense.periodInDays }} days
+        </span>
+        <span *ngIf="expense.repeatingExpenseType === null && expense.periodInDays === null"
+              class="badge me-2 bg-danger">
+          No
+        </span>
+      </div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Paid By</label>
+      <div class="col-md-8 col-lg-5">{{ expense.paidBy.firstName + " " + expense.paidBy.lastName }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Split Strategy</label>
+      <div class="col-md-8 col-lg-5 d-flex align-items-center">
+        <span class="badge me-2 bg-success">
+          {{ expense.debitUsers[0].splitBy }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Paid for</label>
+      <div class="col-md-7 col-lg-7">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let debitUser of expense.debitUsers">
+            {{ debitUser.user.firstName + " " + debitUser.user.lastName }}
+            pays {{ formatAmount(debitUser.splitBy, debitUser.value) + " " + determineValueRepresentation(debitUser) }}
+            for this expense
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>

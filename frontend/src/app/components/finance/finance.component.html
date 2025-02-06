@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-md-4">
+    <h1 class="display-5">Statistics</h1>
+  </div>
+  <div class="custom-header-border"></div>
+  <div class="w-100 col-md-8 mt-4 text-end">
+    <div class="d-md-inline-block me-2" style="vertical-align: middle">
+      <select class="form-select" id="graphType" [(ngModel)]="selectedGraphType">
+        <option value="barchart">Bar Chart</option>
+        <option value="radar">Radar Chart</option>
+      </select>
+    </div>
+    <button type="button" class="btn btn-secondary me-2 mt-2 mt-md-0" [routerLink]="['/expense']">
+      <i class="bi bi-list"></i> Expense Overview
+    </button>
+    <button type="button" class="btn btn-primary mt-2 mt-md-0" [routerLink]="['/expense/create']">
+      <i class="bi bi-plus-square"></i> New Expense
+    </button>
+  </div>
+</div>
+
+<div class="mt-4">
+  <ng-container *ngIf="selectedGraphType === 'barchart'">
+    <app-barchart-vertical [reloadSubject]="reloadGraph.asObservable()"></app-barchart-vertical>
+  </ng-container>
+
+  <ng-container *ngIf="selectedGraphType === 'radar'">
+    <app-radar [reloadSubject]="reloadGraph.asObservable()"></app-radar>
+  </ng-container>
+</div>
+
+<h1 class="display-5">Debits</h1>
+<div class="custom-header-border"></div>
+<div class="w-100 row justify-content-center">
+  <div class="col-12 col-md-10 col-lg-5 mt-4">
+    <app-debits
+      [balanceDebits]="balanceDebits"
+      [activeUserId]="parseInt(activeUser.id)"
+      (reloadData)="reloadData()"
+    ></app-debits>
+  </div>
+</div>

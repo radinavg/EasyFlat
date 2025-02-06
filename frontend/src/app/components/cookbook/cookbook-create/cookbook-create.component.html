@@ -1,0 +1,144 @@
+<div class="container ">
+  <h1 class="display-4">{{heading}}</h1>
+  <div style="width: 100%; height: 100%; border: 1px black solid" class="mb-3"></div>
+  <div class=" d-flex justify-content-between align-items-center mb-3">
+    <button type="submit"
+            class="btn btn-secondary ms-auto me-2 bi-ban"
+            [routerLink]="['/cookbook']"
+    >
+      Cancel
+    </button>
+  </div>
+  <form #form="ngForm" (submit)="onSubmit(form)">
+    <div class="row row-cols-1">
+      <div class="row p-2">
+        <label for="title"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Title <span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="title"
+                 name="title"
+                 placeholder="Title"
+                 [(ngModel)]="recipe.title">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="summary"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+
+        >
+          Summary <span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <textarea type="text"
+                    class="form-control"
+                    id="summary"
+                    name="summary"
+                    placeholder="Summary"
+                    [(ngModel)]="recipe.summary"
+                    rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="servings"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Servings <span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="number"
+                 min="0.1"
+                 max="100000000"
+                 class="form-control"
+                 id="servings"
+
+                 name="servings"
+                 placeholder="Servings"
+                 [(ngModel)]="recipe.servings">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="readyInMinutes"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Ready in minutes <span style="color: red">*</span>
+        </label>
+        <div class="col-md-8 col-lg-8">
+          <input type="number"
+                 min="0.1"
+                 max="100000000"
+                 class="form-control"
+                 id="readyInMinutes"
+                 name="readyInMinutes"
+
+                 placeholder="Ready in minutes"
+                 [(ngModel)]="recipe.readyInMinutes">
+        </div>
+      </div>
+      <div class="row p-2">
+        <label for="ingredients"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Ingredients
+        </label>
+        <div class="col-md-10 col-lg-8"
+             id="ingredients">
+          <span *ngFor="let ingredient of recipe.extendedIngredients; let i = index"
+                class="p-2">
+            <div class="border-bottom">
+              {{ingredient.name}} {{ingredient.amount}} {{ingredient.unit}}
+              <button type="button"
+                      class="btn btn-light ms-2"
+                      (click)="removeIngredient(i)">
+                <i class="bi bi-trash"></i>
+                Delete
+              </button>
+            </div>
+          </span>
+
+          <div class="input-group mb-3">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Ingredient"
+                   #ingredientInput>
+            <input type="number"
+                   min="0"
+                   class="form-control"
+                   placeholder="Amount"
+                   #amountInput>
+            <select class="form-select form-select-md"
+                    name="unit"
+                    [(ngModel)]="selectedUnit">
+              <option *ngFor="let unit of availableUnits"
+                      [ngValue]="unit">
+                {{ formatUnitName(unit) }}
+              </option>
+            </select>
+
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="addIngredient(ingredientInput.value, amountInput.value)">
+              <i class="bi bi-plus-square">Add ingredient</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit"
+            class="btn btn-secondary float-end"
+            [disabled]="!form.valid"
+    >
+      {{ submitButtonText }}
+    </button>
+
+  </form>
+</div>

@@ -1,0 +1,115 @@
+<div class="container">
+
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h1 class="display-4">Edit Chore Preference List</h1>
+    </div>
+    <div class="col mt-4 text-end">
+      <button type="submit"
+              class="btn btn-secondary ms-auto me-2 bi-ban float-end"
+              [routerLink]="['/chores/all']"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+
+<div class="custom-header-border"></div>
+
+<div class="ms-1" style="margin-bottom: 20px">
+  <label class="col-form-label">
+    Actions
+  </label>
+  <div>
+    <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToAllChores()">
+      All Chores
+    </button>
+    <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToMyChores()">
+      My Chores
+    </button>
+    <button class="btn btn-warning" style="margin-right: 4px;" (click)="navigateToLeaderboard()">
+      Leaderboard
+    </button>
+  </div>
+
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <form #form="ngForm" (submit)="onSubmit(form)">
+        <!-- First Chore -->
+        <div class="row p-2" >
+        <label class="col-form-label text-muted col-md-2 col-lg-4">First Chore</label>
+        <div class="form-elements">
+          <div class="col-md-2 col-lg-2 mt-2">
+            <select style="width: 250px" class="form-select form-select-md" name="first" [(ngModel)]="preference.first" >
+              <option *ngFor="let chore of filterChores(chores, [preference.second, preference.third, preference.fourth])" [ngValue]="chore">{{ chore.name }}</option>
+              <option [ngValue]="null">No Chore</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+
+        <!-- Second Chore -->
+        <div class="row p-2" >
+          <label class="col-form-label text-muted col-md-2 col-lg-4">Second Chore</label>
+          <div class="form-elements">
+            <div class="col-md-2 col-lg-2 mt-2">
+              <select style="width: 250px" class="form-select form-select-md" name="second" [(ngModel)]="preference.second" >
+                <option *ngFor="let chore of filterChores(chores, [preference.first, preference.third, preference.fourth])" [ngValue]="chore">{{ chore.name }}</option>
+                <option [ngValue]="null">No Chore</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Third Chore -->
+        <div class="row p-2" >
+          <label class="col-form-label text-muted col-md-2 col-lg-4">Third Chore</label>
+          <div class="form-elements">
+            <div class="col-md-2 col-lg-2 mt-2">
+              <select style="width: 250px" class="form-select form-select-md" name="third" [(ngModel)]="preference.third"  >
+                <option *ngFor="let chore of filterChores(chores, [preference.first, preference.second, preference.fourth])" [ngValue]="chore">{{ chore.name }}</option>
+                <option [ngValue]="null">No Chore</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fourth Chore -->
+        <div class="row p-2" >
+          <label class="col-form-label text-muted col-md-2 col-lg-4">Fourth Chore</label>
+          <div class="form-elements">
+            <div class="col-md-2 col-lg-2 mt-2">
+              <select style="width: 250px" class="form-select form-select-md" name="fourth" [(ngModel)]="preference.fourth" >
+                <option *ngFor="let chore of filterChores(chores, [preference.first, preference.second, preference.third])" [ngValue]="chore">{{ chore.name }}</option>
+                <option [ngValue]="null">No Chore</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary p-2" style="margin: 10px;" [disabled]="!form.valid">Save</button>
+        <div>
+          <small id="pointsHelp" class="form-text text-muted">Chores must be provided in the order of first to fourth.</small>
+        </div>
+      </form>
+    </div>
+
+    <!-- Div placed next to the chore menus -->
+    <div class="col-md-6" style="margin-top: 50px">
+      <div class="col-md-4 col-lg-6 mt-2">
+        <app-chore-preference-card [firstName]="oldPreference?.first?.name"
+                                   [secondName]="oldPreference?.second?.name"
+                                   [thirdName]="oldPreference?.third?.name"
+                                   [fourthName]="oldPreference?.fourth?.name">
+        </app-chore-preference-card>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>

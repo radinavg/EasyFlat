@@ -1,0 +1,40 @@
+<h1 class="display-4">Shopping Lists</h1>
+<div class="custom-header-border"></div>
+
+<form class="d-flex flex-row w-auto mb-3">
+
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="flex-grow-1">
+    <label for="searchTitle" class="col-form-label">
+      Title
+    </label>
+    <input type="text" id="searchTitle" name="searchTitle"
+           class="form-control" [(ngModel)]="searchParams"
+           (ngModelChange)="loadLists()"
+    >
+  </div>
+
+</form>
+
+<div class="text-end">
+  <button type="button"
+          class="btn btn-primary"
+          [routerLink]="['list', 'create']">
+    <i class="bi bi-plus-square"></i>
+    Add Shopping List
+  </button>
+</div>
+
+<div class="row row-cols-4">
+  <div class="col" *ngFor="let list of lists">
+    <a style="text-decoration: none"
+       [routerLink]="['list', list.id]"
+       aria-label="Show list details">
+      <app-shopping-list-card
+        [listName]="list.name"
+        [itemsCount]="list.itemsCount"
+      ></app-shopping-list-card>
+    </a>
+  </div>
+</div>
+

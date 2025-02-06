@@ -1,0 +1,41 @@
+<div class="card" [ngClass]="mode === 1 ? 'custom-card' : ''" [class.completed-chore]="completed">
+
+  <div class="card-header">
+    <h5 class="card-title">{{getTruncated(name, 23)}} </h5>
+  </div>
+  <div class="card-body">
+
+    <p class="card-text" *ngIf="description">
+      {{ getTruncated(description, 33) }}
+    </p>
+
+    <p class="card-text">Deadline:
+      <span style="font-weight: bold" [ngClass]="getColorBasedOnDeadline()">
+        {{ endDate | date }}
+      </span>
+    </p>
+
+    <p *ngIf="mode === 0" class="card-text">User:
+      {{ user }}
+    </p>
+
+  </div>
+
+  <div class="card-footer">
+    <div class="row mb-0 mb-md-0">
+
+      <div class="col">
+        <p class="card-text">Points: {{ points }}</p>
+      </div>
+
+      <div *ngIf="description?.length > 33 && mode === 0" class="col mb-0 mt-0 text-end">
+        <button style="font-size: 10px; padding: 5px;" class="btn btn-toggle" [class.active]="truncated"
+                (click)="toggleTruncate()">
+          <small>{{ truncated ? 'Expand' : 'Hide' }}</small>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

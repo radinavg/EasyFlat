@@ -1,0 +1,136 @@
+<div class="pt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="formRegister"></span>
+
+      <div class="card mt-3">
+        <div class="card-header">
+          <h3 class="mb-0">Account Details</h3>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="accountForm" (ngSubmit)="update()">
+
+            <div class="form-group">
+              <div>
+                <label for="firstName">First name</label>
+                <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName">
+              </div>
+              <div *ngIf="submitted && accountForm.get('firstName').errors?.required" class="error">
+                <small class="form-text text-warning">Your first name is required!</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div>
+                <label for="firstName">Last name</label>
+                <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName">
+              </div>
+              <div *ngIf="submitted && accountForm.get('lastName').errors?.required" class="error">
+                <small class="form-text text-warning">Your last name is required!</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div>
+                <label for="firstName">Email</label>
+                <input type="email" name="email" formControlName="email" class="form-control" id="email">
+              </div>
+              <div *ngIf="submitted && accountForm.get('email').errors?.required" class="error">
+                <small class="form-text text-warning">Your email is required!</small>
+              </div>
+            </div>
+            <button style="margin-right: 10px; margin-top: 20px" type="submit" class="btn btn-success float-right">Save Changes</button>
+            <button style="margin-right: 10px; margin-top: 20px" type="button" data-bs-toggle="modal" [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(user)" class="btn btn-danger float-right">Delete Account</button>
+          </form>
+        </div>
+        <app-confirm-delete-dialog
+          [deleteInfo]="'account'"
+          [deleteName]="user.firstName"
+          [deleteId]="user.id.toString()"
+          (confirm)="delete()">
+        </app-confirm-delete-dialog>
+
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div *ngIf="user.flatName != null">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <span class="anchor" id="flatForm"></span>
+
+      <div class="card mt-3">
+        <div class="card-header">
+          <h3 class="mb-0">Shared Flat Details</h3>
+        </div>
+
+        <div class="card-body">
+          <form class="form" [formGroup]="flatForm" >
+            <div class="form-group">
+              <div>
+                <label>Flat name</label>
+                <div class="flat-name-display">{{ user.flatName }}</div>              </div>
+            </div>
+            <button
+              style="margin-right: 10px; margin-top: 20px"
+              type="button" data-bs-toggle="modal"
+              [attr.data-bs-target]="'#sign-out-modal' + getIdFormatForDeleteModal(user)"
+
+              class="btn btn-danger float-right">Sign Out</button>
+
+            <button *ngIf="user.admin" style="margin-right: 10px; margin-top: 20px"
+                    type="button" data-bs-toggle="modal"
+                    [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteFlatModal(user)" class="btn btn-danger float-right">Delete Flat</button>
+          </form>
+          <app-confirm-delete-dialog
+            [deleteInfo]="'shared flat'"
+            [deleteName]="truncateString(user.flatName, 20)"
+            [deleteId]="'-1224'"
+            (confirm)="deleteFlat()"
+          ></app-confirm-delete-dialog>
+
+          <app-sign-out-modal
+            [signOutInfo]="'from flat'"
+            [signOutName]="user.firstName"
+            [signOutId]="user.id.toString()"
+            (confirm)="openAdminSelectionModal()">
+          </app-sign-out-modal>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <span class="anchor" id="passwordForm"></span>
+
+    <div class="card mt-3">
+      <div class="card-header">
+        <h3 class="mb-0">Change password</h3>
+      </div>
+
+      <div class="card-body">
+        <form class="form" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <div>
+          <label for="newPassword">New password</label>
+          <input type="password" name="newPassword" formControlName="newPassword" class="form-control" id="newPassword"
+                 placeholder="New password">
+          <div *ngIf="submittedPassword && passwordForm.controls.newPassword.errors" class="error">
+          </div>
+          <label for="repeatPassword">Repeat new password</label>
+          <input type="password" name="repeatPassword" formControlName="repeatPassword" class="form-control" id="repeatPassword"
+                 placeholder="Repeat new password">
+          <div *ngIf="submittedPassword && passwordForm.controls.repeatPassword.errors" class="error">
+          </div>
+          <button style="margin-right: 10px; margin-top: 20px" type="submit" class="btn btn-success float-right">Save Password</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+

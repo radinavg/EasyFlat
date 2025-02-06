@@ -1,0 +1,28 @@
+<div *ngFor="let debit of balanceDebits; let i = index"
+     class="row p-2 border rounded m-1">
+  <div class="col-10">
+    {{formatUserName(debit.debtor)}}
+    owes {{formatUserName(debit.creditor)}} <span
+    style="font-weight: bold;">{{convertAmountToEuro(debit.valueInCent)}} €</span>
+  </div>
+  <div *ngIf="debit.debtor.id === activeUserId"
+       class="btn-group col-2"
+       role="group"
+       aria-label="Basic example">
+    <button type="button"
+            class="btn btn-secondary"
+            [attr.data-bs-toggle]="'modal'"
+            [attr.data-bs-target]="'#confirm-payback-modal-' + i"
+    >
+      Pay
+    </button>
+  </div>
+
+  <app-confirm-payed-pack
+    [mId]="i"
+    [debit]="debit"
+    (confirm)="payback(debit)">
+  </app-confirm-payed-pack>
+</div>
+
+

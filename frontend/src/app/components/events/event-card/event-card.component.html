@@ -1,0 +1,51 @@
+<div class="card mt-3" style="width: 18rem; height: 225px;">
+  <div class="card-header text-black">
+    <div class=" d-flex justify-content-between align-items-center">
+      <h5 class="card-title">{{ truncateString(event.title, 20) }}</h5>
+      <button type="button" class="btn btn-sm btn btn-secondary bi-save" (click)="export(event.id)">
+      </button>
+    </div>
+  </div>
+  <div class="card-body" [ngbTooltip]="event.description"
+       placement="bottom">
+    <div class="row">
+      <p class="card-text">{{truncateString(event.description, 30)}}</p>
+    </div>
+    <div class="row">
+      <p class="card-text"><strong>Date:</strong> {{event.date | date:'MMM dd, yyyy'}}</p>
+    </div>
+    <div>
+      <div class="row">
+        <p *ngIf="event.startTime!=='00:00:00' || event.endTime!=='23:59:00'" class="card-text"><strong>Time:</strong> {{ formatTime(event.startTime) }} - {{ formatTime(event.endTime) }}
+        <p *ngIf="event.startTime==='00:00:00' && event.endTime==='23:59:00'" class="card-text"><strong>Time:</strong> All day
+        </p>
+      </div>
+      <ng-container *ngFor="let label of event.labels; let last = last">
+        <span style="font-weight: bold" [style.color]="label.labelColour">{{ label.labelName }}</span>
+        <ng-container *ngIf="!last">,</ng-container>
+      </ng-container>
+    </div>
+
+  </div>
+  <div class="card-footer">
+    <button type="button"
+            class="btn btn-warning btn-sm me-2"
+            [routerLink]="[event.id, 'edit']"
+    >
+      Edit
+    </button>
+    <button type="button"
+            class="btn btn-danger btn-sm"
+            data-bs-toggle="modal"
+            [attr.data-bs-target]="'#confirm-delete-modal' + getIdForm()"
+    >
+      <i class="bi bi-trash"></i>
+    </button>
+  </div>
+</div>
+<app-confirm-delete-dialog
+  [deleteInfo]="'Event'"
+  [deleteName]="truncateString(event.title, 20)"
+  [deleteId]="event.id.toString()"
+  (confirm)="deleteEvent()"
+></app-confirm-delete-dialog>

@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark px-3 py-2">
+  <a class="navbar-brand ml-lg-5 p-2" href="">EasyFlat<span class="bi bi-house-heart m-2"></span></a>
+  <button class="navbar-toggler ml-5" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse flex-row" id="navbarSupportedContent">
+    <div class="navbar-nav-scroll">
+      <ul class="navbar-nav m-2">
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/digital-storage"
+             routerLinkActive="active">Storage</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/shopping-lists"
+             routerLinkActive="active">Shop</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/cooking"
+             routerLinkActive="active">Cooking</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/cookbook"
+             routerLinkActive="active">Cookbook</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/chores/all"
+             routerLinkActive="active">Chores</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/events"
+             routerLinkActive="active">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="authService.isLoggedIn() && isInWg()" routerLink="/finance"
+             routerLinkActive="active">Finance</a>
+
+      </ul>
+    </div>
+
+    <ul class="navbar-nav">
+      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
+      <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/register"
+         routerLinkActive="active">Register</a>
+    </ul>
+
+    <span class="flex-fill"></span>
+    <ul class="navbar-nav ">
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/account"
+         routerLinkActive="active">Account <span class="bi bi-person-circle ml-2"></span></a>
+      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="logoutUser()">Logout</a>
+    </ul>
+
+
+  </div>
+</nav>

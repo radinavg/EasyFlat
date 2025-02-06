@@ -1,0 +1,46 @@
+<h1 class="display-4">My Chores</h1>
+<div class="custom-header-border"></div>
+
+
+<label class="col-form-label">
+  Actions
+</label>
+<div style="margin-bottom: 20px">
+  <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToAllChores()">
+    All Chores
+  </button>
+  <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToPreference()">
+    Preference
+  </button>
+  <button class="btn btn-warning" style="margin-right: 4px;" (click)="navigateToLeaderboard()">
+    Leaderboard
+  </button>
+  <button *ngIf="!completedChoresIsEmpty()"
+          type="button"
+          class="btn btn-success"
+          (click)="showConfirmationModal()">
+    <i class="bi bi-check-square"></i>
+    Completed
+  </button>
+</div>
+
+
+<div *ngIf="chores.length === 0" style="text-align: center;">
+  <h3>{{message}}</h3>
+</div>
+
+<div class="row row-cols-4" *ngIf="chores.length > 0">
+  <div style="margin-bottom: 20px;" class="col" *ngFor="let chore of chores">
+    <a style="text-decoration: none">
+      <app-chore-card [name]="chore.name"
+                      [description]="chore.description"
+                      [endDate]="chore.endDate"
+                      [points]="chore.points"
+                      [completed]="chore.completed"
+                      [mode]=1
+                      (click)="updateChoreComplete(chore)">
+      </app-chore-card>
+    </a>
+
+  </div>
+</div>

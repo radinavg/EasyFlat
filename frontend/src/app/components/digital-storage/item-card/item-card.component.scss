@@ -1,0 +1,9 @@
+.custom-nowrap {
+  white-space: normal;
+}
+
+@media (min-width: 1200px) {
+  .custom-nowrap {
+    white-space: nowrap;
+  }
+}

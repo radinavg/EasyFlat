@@ -1,0 +1,26 @@
+<div class="modal fade" [id]="'sign-out-modal'  + getIdFormatForDeleteModal() " tabindex="-1"
+     aria-labelledby="sign-out-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sign-out-modal">Sign Out From Shared Flat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you really want to sign out from your shared flat?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-bs-dismiss="modal"
+        >
+          No, stop
+        </button>
+        <button type="button" class="btn btn-danger"
+                data-bs-dismiss="modal"
+                (click)="confirm.emit()">
+          Yes, sign out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

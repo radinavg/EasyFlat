@@ -1,0 +1,14 @@
+<div class="mt-4">
+  <h3>Missing ingredients for {{recipe.title}}</h3>
+  It seems like you are missing the following ingredients :
+  <ul class="list-group">
+    <li *ngFor="let ingredient of recipeWithMissing.missedIngredients" class="list-group-item">
+      <strong>{{ ingredient.amount }} {{ ingredient.unit }}</strong> - {{ ingredient.name }}
+    </li>
+  </ul>
+</div>
+<div class="mt-4">
+  <button style="margin-right: 10px;" class="btn btn-outline-primary" (click)="addToShoppingList()">Add missing ingredients to shopping list</button>
+  <button style="margin-right: 10px;" class="btn btn-success" (click)="cook()">Cook anyway*</button>
+</div>
+*By choosing "Cook anyway" only available ingredients will be reduced from the storage!

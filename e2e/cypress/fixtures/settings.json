@@ -1,0 +1,14 @@
+{
+  "adminUser": "admin@email.com",
+  "adminPw": "password",
+  "baseUrl": "localhost:4200",
+
+  "user": {
+    "firstName": "Marin",
+    "lastName": "Stanev",
+    "validEmail": "user@email.com",
+    "invalidEmail": "useremail.com",
+    "password": "password",
+    "passwordNotMatch": "password1"
+  }
+}

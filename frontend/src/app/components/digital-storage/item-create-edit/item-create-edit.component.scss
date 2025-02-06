@@ -1,0 +1,9 @@
+.custom-switch {
+  width: 3rem;
+  height: 1.2rem;
+  background-color: #ccc;
+}
+
+.custom-switch:checked {
+  background-color: #4caf50; /* Active or 'on' state color */
+}

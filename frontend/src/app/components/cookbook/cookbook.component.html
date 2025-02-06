@@ -1,0 +1,29 @@
+<div class="container">
+  <h1 class="display-4">Cookbook</h1>
+  <div style="width: 100%; height: 100%; border: 1px black solid"></div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="col">
+      <button type="button"
+              class="btn btn-primary float-end m-3"
+              [routerLink]="['create']">
+        Add New Recipe
+      </button>
+    </div>
+
+  </div>
+  <div *ngIf="recipes.length === 0" style="text-align: center;">
+    <h3>No recipes found!</h3>
+  </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 ">
+      <div class="col" *ngFor="let recipe of recipes" style="margin-right: 2.5rem; margin-bottom: 2.5rem;">
+        <app-cookbook-card [recipe]="recipe" (cookClicked)="openRecipeModal($event)"
+                           (recipeCooked)="handleRecipeIsCooked($event)"
+                           (recipeDeleted)="handleRecipeDeleted($event)"
+                           (detailsClicked)="openDetailModal($event)">
+        </app-cookbook-card>
+
+      </div>
+    </div>
+  </div>
+

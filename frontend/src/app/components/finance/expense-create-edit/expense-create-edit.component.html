@@ -1,0 +1,214 @@
+  <form #form="ngForm" (submit)="onSubmit(form)">
+    <div class="row">
+      <div class="col-md-8 col-lg-7">
+        <h1 class="display-5">{{ heading }}</h1>
+      </div>
+      <div class="col-md-4 mt-4 col-lg-5 text-end">
+        <button type="submit"
+                class="btn btn-primary me-2 mb-1 md-md-0"
+                [disabled]="!form.valid"
+        >
+          <i class="bi" [class.bi-plus-square]="true"></i>
+          {{ submitButtonText }}
+        </button>
+        <button type="button"
+                class="btn btn-danger me-2 mb-1 md-md-0"
+                data-bs-toggle="modal"
+                [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(expense)"
+                aria-label="Delete expense"
+                *ngIf="!modeIsCreate"
+        >
+          <i class="bi bi-trash"></i>
+          Delete
+        </button>
+        <button type="button"
+                class="btn btn-secondary mb-1 md-md-0"
+                [routerLink]="[previousUrl]">
+          <i class="bi" [class.bi-arrow-left]="modeIsCreate" [class.bi-ban]="!modeIsCreate"></i>
+          {{ modeIsCreate ? 'Back' : 'Cancel' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="custom-header-border mt-2 mb-2"></div>
+
+    <app-confirm-delete-dialog *ngIf="!modeIsCreate"
+      deleteInfo="expense"
+      [deleteName]="expense.title !== null ? expense.title : ''"
+      [deleteId]="expense.id !== null ? expense.id.toString() : null"
+      (confirm)="delete()">
+    </app-confirm-delete-dialog>
+
+    <div class="row row-cols-1">
+      <div class="row p-2">
+        <label for="title"
+               class="col-form-label text-muted col-3"
+        >
+          Title<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="title"
+                 name="title"
+                 placeholder="Title"
+                 required
+                 [(ngModel)]="expense.title">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="description"
+               class="col-form-label text-muted col-3"
+        >
+          Description
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="description"
+                 name="description"
+                 placeholder="Description"
+                 [(ngModel)]="expense.description">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="amountInCents"
+               class="col-form-label text-muted col-3"
+        >
+          Amount<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="number"
+                 class="form-control"
+                 id="amountInCents"
+                 name="amountInCents"
+                 placeholder="Amount"
+                 required
+                 [(ngModel)]="amountInEuro">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="createdAtDate"
+               class="col-form-label text-muted col-3"
+        >
+          Timestamp<span style="color: red">*</span>
+        </label>
+        <div class="col-4">
+          <input
+            type="date"
+            class="form-control"
+            placeholder="dd-mm-yyyy"
+            id="createdAtDate"
+            name="createdAtDate"
+            [(ngModel)]="expenseDate"
+            ngbDatepicker
+            #date="ngbDatepicker"
+            required
+          />
+        </div>
+        <div class="col-4">
+          <ngb-timepicker id="createdAtTime"
+                          name="createdAtTime"
+                          [(ngModel)]="expenseTime"/>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="repeatingExpense"
+               class="col-form-label text-muted col-3"
+        >
+          Repeating Expense
+        </label>
+        <div class="col-4">
+          <app-radio-buttons-component
+            id="repeatingExpense"
+            [(bindingObject)]="selectedRepeatingOption"
+            [options]="[
+              {value: RepeatingExpenseOptions.NO_REPEAT, label: 'do not repeat'},
+              {value: RepeatingExpenseOptions.DAYS_UNTIL_REPEAT, label: 'repeat after'},
+              {value: RepeatingExpenseOptions.REPEAT_AT, label: 'repeat at'}
+            ]"
+            (bindingObjectChange)="onRepeatingChange()"
+          >
+          </app-radio-buttons-component>
+        </div>
+        <div *ngIf="selectedRepeatingOption === RepeatingExpenseOptions.DAYS_UNTIL_REPEAT"
+             class="col-4">
+          <input type="number"
+                 class="form-control"
+                 id="periodInDays"
+                 name="periodInDays"
+                 placeholder="Period in days"
+                 [(ngModel)]="expense.periodInDays"
+                 [required]="selectedRepeatingOption === RepeatingExpenseOptions.DAYS_UNTIL_REPEAT">
+        </div>
+        <div *ngIf="selectedRepeatingOption === RepeatingExpenseOptions.REPEAT_AT "
+             class="col-4">
+          <select class="form-select"
+                  id="repeatingExpenseType"
+                  name="repeatingExpenseType"
+                  [(ngModel)]="this.expense.repeatingExpenseType">
+            <option value="{{RepeatingExpenseType.FIRST_OF_MONTH}}"
+                    [selected]="this.expense.repeatingExpenseType === RepeatingExpenseType.FIRST_OF_MONTH">
+              First of the month
+            </option>
+            <option value="{{RepeatingExpenseType.FIRST_OF_QUARTER}}">
+              First of the quarter
+            </option>
+            <option value="{{RepeatingExpenseType.FIRST_OF_YEAR}}">
+              First of the year
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="paidBy"
+               class="col-form-label text-muted col-3"
+        >
+          Payer<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <app-user-dropdown
+            id="paidBy"
+            [users]="users"
+            [(activatedUser)]="expense.paidBy">
+          </app-user-dropdown>
+        </div>
+
+        <div class="row p-2 mt-2">
+          <label for="splitBy"
+                 class="col-form-label text-muted col-4"
+          >
+            Split Strategy<span style="color: red">*</span>
+          </label>
+          <div class="col-8">
+            <app-radio-buttons-component
+              id="splitBy"
+              [(bindingObject)]="selectedSplitBy"
+              [options]="splitByOptions"
+              (bindingObjectChange)="onSplitByChange()"
+            >
+            </app-radio-buttons-component>
+          </div>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <span class="col-4"></span>
+        <div class="col-8">
+          <h3>Paid for</h3>
+          <app-show-user-for-expense
+            id="users"
+            [splitBy]="this.selectedSplitBy"
+            [amountInEuro]="this.amountInEuro"
+            [(users)]="this.expense.debitUsers"
+            [mode]="this.mode"
+          ></app-show-user-for-expense>
+        </div>
+      </div>
+    </div>
+  </form>

@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-8">
+      <h1 class="display-4">Product Details</h1>
+    </div>
+    <div class="col mt-4">
+      <button type="button"
+              class="btn btn-primary me-2 mb-1 mb-md-0"
+              [routerLink]="['../edit']"
+              aria-label="Edit item"
+      >
+        <i class="bi bi-pencil"></i>
+        Edit
+      </button>
+      <button type="button"
+              class="btn btn-danger me-2 mb-1 mb-md-0"
+              data-bs-toggle="modal"
+              [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(item)"
+              aria-label="Delete item"
+      >
+        <i class="bi bi-trash"></i>
+        Delete
+      </button>
+      <button type="button"
+              class="btn btn-secondary"
+              [routerLink]="['/digital-storage', item.generalName]"
+              [queryParams]="item.alwaysInStock ? {stockType: 'always-in-stock'} : {stockType: 'in-stock'}">
+        <i class="bi bi-arrow-left"></i>
+        Back
+      </button>
+    </div>
+  </div>
+
+  <div class="custom-header-border mb-2"></div>
+
+  <app-confirm-delete-dialog
+    deleteInfo="item"
+    [deleteName]="item.productName !== null ? item.productName : ''"
+    [deleteId]="item.itemId !== null ? item.itemId.toString() : null"
+    (confirm)="delete()">
+  </app-confirm-delete-dialog>
+
+  <div class="product-details">
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">EAN Number</label>
+      <div *ngIf="item.ean" class="col-md-10 col-lg-8">{{ item.ean }}</div>
+      <div *ngIf="!item.ean" class="col-md-10 col-lg-8">-</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Product Category</label>
+      <div class="col-md-10 col-lg-8">{{ item.generalName }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Product Name</label>
+      <div class="col-md-10 col-lg-8">{{ item.productName }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Current Quantity</label>
+      <div class="col-md-8 col-lg-5">{{ item.quantityCurrent }} {{ item.unit.name }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Total Quantity</label>
+      <div class="col-md-8 col-lg-5">{{ item.quantityTotal }} {{ item.unit.name }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Always in Stock</label>
+      <div class="col-md-8 col-lg-5 d-flex align-items-center">
+        <span class="badge me-2" [ngClass]="item.alwaysInStock ? 'bg-success' : 'bg-danger'">
+          {{ item.alwaysInStock ? 'Yes' : 'No' }}
+        </span>
+        <span *ngIf="item.alwaysInStock" class="badge bg-secondary">
+          Minimum: {{ item.minimumQuantity }} {{ item.unit.name }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center" *ngIf="item.digitalStorage?.title">
+      <label class="col-form-label col-md-2 col-lg-2">Digital Storage</label>
+      <div class="col-md-10 col-lg-8">{{ item.digitalStorage.title }}</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Store</label>
+      <div *ngIf="item.boughtAt" class="col-md-10 col-lg-8">{{ item.boughtAt }}</div>
+      <div *ngIf="!item.boughtAt" class="col-md-10 col-lg-8">-</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Brand</label>
+      <div *ngIf="item.brand" class="col-md-10 col-lg-8">{{ item.brand }}</div>
+      <div *ngIf="!item.brand" class="col-md-10 col-lg-8">-</div>
+    </div>
+
+    <div class="row border-bottom p-2 align-items-center odd-detail">
+      <label class="col-form-label col-md-2 col-lg-2">Description</label>
+      <div *ngIf="item.description" class="col-md-10 col-lg-8">{{ item.description }}</div>
+      <div *ngIf="!item.description" class="col-md-10 col-lg-8">-</div>
+    </div>
+
+    <div class="row p-2 align-items-center">
+      <label class="col-form-label col-md-2 col-lg-2">Ingredients</label>
+      <div class="col-md-4 col-lg-4">
+        <ul *ngIf="item.ingredients.length > 0" class="list-group">
+          <li class="list-group-item" *ngFor="let ingredient of item.ingredients">{{ ingredient.name }}</li>
+        </ul>
+        <span *ngIf="item.ingredients.length <= 0">-</span>
+      </div>
+    </div>
+  </div>
+</div>

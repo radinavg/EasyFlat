@@ -1,0 +1,53 @@
+<div class="container">
+
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h1 class="display-4"> Create New Shopping List </h1>
+    </div>
+    <div class="col mt-4 text-end">
+      <button type="submit"
+              class="btn btn-secondary ms-auto me-2 bi-ban"
+              [routerLink]="['/shopping-lists']"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="custom-header-border"></div>
+
+  <form #form="ngForm" (keydown.enter)="$event.preventDefault()" (submit)="onSubmit(form)">
+
+    <div class="col-md-5 mb-3 mt-3 col-lg-auto text-end">
+      <button type="submit"
+              class="btn btn-primary ms-auto me-2"
+              style="margin-top: 10px"
+      >
+        <i class="bi bi-plus-square"></i>
+        Create
+      </button>
+    </div>
+
+    <div class="row row-cols-1">
+
+      <div class="row p-2">
+        <label for="listName"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          List Name<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="listName"
+                 name="listName"
+                 placeholder="List Name"
+                 [(ngModel)]="list.name">
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+

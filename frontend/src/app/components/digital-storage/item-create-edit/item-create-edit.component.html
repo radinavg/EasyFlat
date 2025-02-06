@@ -1,0 +1,342 @@
+<div *ngIf="modeIsCreate">
+  <h1 class="display-5">Scan a product barcode</h1>
+  <div class="row">
+    <ngx-scanner-qrcode #action="scanner"
+                        (event)="updateEAN($event)"
+
+                        class="mt-2 h-50 w-50 mx-auto"
+                        [hidden]="!action.isStart">
+    </ngx-scanner-qrcode>
+  </div>
+  <div class="row mt-2 justify-content-center">
+    <button *ngIf="action.isStart"
+            type="button"
+            class="col-4 w-25 btn btn-primary me-2"
+            (click)="togglePlayPause()">
+      {{ action.isPause ? 'Play' : 'Pause' }}
+    </button>
+
+    <button type="button"
+            [ngClass]="{'btn btn-outline-primary': true, 'col-4 w-25': action.isStart}"
+            (click)="toggleScanning()">
+      {{ action.isStart ? 'Stop' : 'Start Scanning' }}
+    </button>
+
+    <div *ngIf="action.isStart" class="col-4 me-0">
+      <select #select
+              (change)="action.playDevice(select.value)"
+              class="form-select form-select-md">
+        <option [value]="null" selected>Select device</option>
+        <option *ngFor="let cameraDevice of action.devices.value; let i = index"
+                [value]="cameraDevice.deviceId"
+                [selected]="i === action.deviceIndexActive">
+          {{ i + 1 + ": " + (!cameraDevice.label ? 'Camera' : cameraDevice.label) }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<app-confirm-delete-dialog
+  *ngIf="!modeIsCreate"
+  deleteInfo="item"
+  [deleteName]="item.productName !== null ? item.productName : ''"
+  [deleteId]="item.itemId !== null ? item.itemId.toString() : null"
+  (confirm)="delete()">
+</app-confirm-delete-dialog>
+<form class="row g-3 mt-2 mb-4" #form="ngForm" (keydown.enter)="$event.preventDefault()" (submit)="onSubmit(form)">
+
+  <div class="row">
+    <div class="col-md-8 col-lg-7">
+      <h1 class="display-5">{{ heading }}</h1>
+    </div>
+    <div class="col-md-4 mt-4 col-lg-5 text-end">
+      <button type="submit"
+              class="btn btn-primary me-2"
+              [disabled]="!form.valid"
+      >
+        <i class="bi" [class.bi-plus-square]="modeIsCreate" [class.bi-pencil]="!modeIsCreate"></i>
+        {{ submitButtonText }}
+      </button>
+      <button type="button"
+              class="btn btn-danger me-2"
+              data-bs-toggle="modal"
+              [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(item)"
+              aria-label="Delete item"
+              *ngIf="!modeIsCreate"
+      >
+        <i class="bi bi-trash"></i>
+        Delete
+      </button>
+      <button type="button" class="btn btn-secondary"
+              [routerLink]="modeIsCreate ? ['/digital-storage'] : ['/digital-storage', item.generalName]"
+              [queryParams]="item.alwaysInStock ? {stockType: 'always-in-stock'} : {stockType: 'in-stock'}">
+        <i class="bi" [class.bi-arrow-left]="modeIsCreate" [class.bi-ban]="!modeIsCreate"></i>
+        {{ modeIsCreate ? 'Back' : 'Cancel' }}
+      </button>
+    </div>
+  </div>
+
+  <div>
+    <fieldset class="border rounded-3 p-3 row">
+      <legend>Product Identification</legend>
+      <div class="col-md-12">
+        <label for="ean" class="form-label">
+          EAN Number
+        </label>
+        <input type="text"
+               class="form-control"
+               id="ean"
+               name="ean"
+               aria-describedby="eanHelp"
+               [(ngModel)]="item.ean"
+               (ngModelChange)="searchForEan($event)">
+        <small id="eanHelp" class="form-text text-muted">The EAN can be used to fetch the data of an item.</small>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="generalName" class="form-label">
+          Product Category<span style="color: red">*</span>
+        </label>
+        <app-autocomplete
+          id="generalName"
+          name="generalName"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="false"
+          placeholder="e.g. fruit"
+          [(ngModel)]="item.generalName"
+          [formatModel]="formatGeneralName"
+          [suggestions]="generalNameSuggestions"
+          aria-describedby="generalNameHelp"
+        ></app-autocomplete>
+        <small id="generalNameHelp" class="form-text text-muted">The item category or general term.</small>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="productName" class="form-label">
+          Product Name<span style="color: red">*</span>
+        </label>
+        <input type="text"
+               class="form-control"
+               id="productName"
+               name="productName"
+               [(ngModel)]="item.productName">
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset class="border rounded-3 p-3 row">
+      <legend>Quantity and Stock Management</legend>
+      <div [ngClass]="{'col-md-6': modeIsCreate, 'col-md-8': !modeIsCreate}">
+        <label for="currentQuantityAndUnit" class="form-label"
+        >
+          <span *ngIf="modeIsCreate"> Current & Total Quantity</span><span *ngIf="!modeIsCreate">Quantity</span><span style="color: red">*</span>
+        </label>
+        <div class="row">
+          <div *ngIf="!modeIsCreate" class="col-md-4">
+            <input type="number"
+                   class="form-control"
+                   id="currentQuantityAndUnit"
+                   name="currentQuantityAndUnit"
+                   placeholder="Current Quantity"
+                   aria-describedby="quantityCurrentHelp"
+                   [(ngModel)]="item.quantityCurrent">
+            <small id="quantityCurrentHelp" class="form-text text-muted">The current quantity.</small>
+          </div>
+
+          <div class="mt-2 mt-md-0 mt-lg-0" [ngClass]="{'col-md-8': modeIsCreate, 'col-md-4': !modeIsCreate}">
+            <input type="number"
+                   class="form-control"
+                   id="totalQuantityAndUnit"
+                   name="totalQuantityAndUnit"
+                   placeholder="Total Quantity"
+                   aria-describedby="quantityTotalHelp"
+                   [(ngModel)]="item.quantityTotal">
+            <small id="quantityTotalHelp" class="form-text text-muted">
+              <span *ngIf="modeIsCreate">If the current quantity is 0 the item is deleted when updated.</span>
+              <span *ngIf="!modeIsCreate">The total quantity.</span>
+            </small>
+          </div>
+          <div class="col-md-4 mt-2 mt-md-0 mt-lg-0">
+            <select class="form-select"
+                    name="unit"
+                    [(ngModel)]="item.unit"
+                    [compareWith]="compareUnitObjects">
+              <option *ngFor="let unit of availableUnits"
+                      [ngValue]="unit">
+                {{ formatUnitName(unit) }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="mt-2 mt-md-0 mt-lg-0" [ngClass]="{'col-md-6': modeIsCreate, 'col-md-4': !modeIsCreate}">
+        <label for="alwaysInStock" class="form-label me-2">
+          Always In Stock<span *ngIf="item.alwaysInStock" style="color: red">*</span>
+        </label>
+        <div class="form-check-inline form-switch">
+          <input class="form-check-input custom-switch"
+                 type="checkbox"
+                 role="switch"
+                 id="alwaysInStock"
+                 name="alwaysInStock"
+                 [(ngModel)]="item.alwaysInStock">
+        </div>
+        <div class="row">
+          <div class="col-md-9">
+            <input class="form-control"
+                   [disabled]="!item.alwaysInStock"
+                   type="text"
+                   id="minimumQuantity"
+                   name="minimumQuantity"
+                   [(ngModel)]="item.minimumQuantity"
+                   placeholder="Minimum Quantity"
+                   aria-describedby="minimumQuantityHelp">
+            <small id="minimumQuantityHelp" class="form-text text-muted">If quantity is below minimum, item is added to
+              shopping list.</small>
+          </div>
+          <div class="col-md-3 mt-2 mt-md-0 mt-lg-0">
+            <input class="form-control"
+                   [disabled]="true"
+                   type="text"
+                   id="minimumQuantityUnit"
+                   name="minimumQuantityUnit"
+                   [(ngModel)]="item.unit.name">
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="expireDate" class="form-label">
+          Expiration Date
+        </label>
+        <input type="date"
+               class="form-control"
+               id="expireDate"
+               name="expireDate"
+               [(ngModel)]="item.expireDate">
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="digitalStorage" class="form-label">
+          Digital Storage<span style="color: red">*</span>
+        </label>
+        <app-autocomplete
+          id="digitalStorage"
+          name="digitalStorage"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="true"
+          aria-describedby="digitalStorageHelp"
+          [(ngModel)]="item.digitalStorage"
+          [formatModel]="formatStorageName"
+          [suggestions]="storageSuggestions"
+          disabled
+        ></app-autocomplete>
+        <small id="digitalStorageHelp" class="form-text text-muted">The assigned storage for the flat.</small>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <fieldset class="border rounded-3 p-3 row">
+      <legend>Product Details and Finance</legend>
+      <div class="col-md-6">
+        <label for="boughtAt" class="form-label">
+          Store
+        </label>
+        <app-autocomplete
+          id="boughtAt"
+          name="boughtAt"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="false"
+          placeholder="Store name"
+          [(ngModel)]="item.boughtAt"
+          [formatModel]="formatBoughtAt"
+          [suggestions]="boughtAtSuggestions">
+        </app-autocomplete>
+      </div>
+      <div class="col-md-6 mt-2 mt-md-0 mt-lg-0" *ngIf="modeIsCreate">
+        <label for="addToFinance" class="form-label me-2">
+          Add To Finance<span *ngIf="item.addToFiance" style="color: red">*</span>
+        </label>
+        <div class="form-check-inline form-switch">
+          <input class="form-check-input custom-switch"
+                 type="checkbox"
+                 role="switch"
+                 id="addToFinance"
+                 name="addToFinance"
+                 [(ngModel)]="item.addToFiance"
+                 (click)="this.item.priceInCent = 1">
+        </div>
+        <input type="number"
+               class="form-control"
+               [disabled]="!item.addToFiance"
+               id="price"
+               name="price"
+               placeholder="Price"
+               [(ngModel)]="priceInEuro"
+               aria-describedby="addToFinanceHelp"
+        >
+        <small id="addToFinanceHelp" class="form-text text-muted">Create a finance entry for this item with the given
+          price in €.</small>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="description" class="form-label">
+          Description
+        </label>
+        <input type="text"
+               class="form-control"
+               id="description"
+               name="description"
+               placeholder="Description"
+               [(ngModel)]="item.description">
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="brand" class="form-label">
+          Brand
+        </label>
+        <app-autocomplete
+          id="brand"
+          name="brand"
+          textInputClass="form-control"
+          valueNeedsToMatchSuggestion="false"
+          placeholder="Brand"
+          [(ngModel)]="item.brand"
+          [formatModel]="formatBrand"
+          [suggestions]="brandSuggestions"
+        ></app-autocomplete>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="ingredients" class="form-label">
+          Ingredients
+        </label>
+        <div class="row">
+          <div class="col pe-2">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Ingredient"
+                   id="ingredients"
+                   #ingredientInput>
+          </div>
+          <div class="col-auto">
+            <button type="button"
+                    class="btn btn-outline-primary"
+                    (click)="addIngredient(ingredientInput.value); ingredientInput.value = ''; ingredientInput.focus() ">
+              <i class="bi bi-plus-square"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mt-2">
+        <label for="ingredients" class="form-label"></label>
+
+        <div *ngFor="let ingredient of item.ingredients; let i = index"
+             class="border-bottom pb-3 pt-2">
+            <span>
+              {{ ingredient.name }}
+            </span>
+          <button type="button"
+                  class="btn btn-outline-danger float-end"
+                  (click)="removeIngredient(i)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</form>

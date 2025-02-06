@@ -1,0 +1,22 @@
+<div class="card mt-3 h-100">
+  <div class="card-body d-flex flex-column justify-content-between h-100">
+    <div>
+      <h5 class="card-title">{{ truncateCategoryTitle(title) }}</h5>
+      <small>Quantity: </small>
+      <small class="custom-nowrap">{{ (quantity % 1 === 0) ? quantity : (quantity | number:'1.0-2') }}&nbsp;/&nbsp;
+        {{ (quantityTotal % 1 === 0) ? quantityTotal : (quantityTotal | number:'1.0-2') }}&nbsp;
+        {{ unit }}
+      </small>
+    </div>
+    <div class="progress">
+      <div class="progress-bar"
+           [ngClass]="getColorBasedOnQuantity()"
+           role="progressbar"
+           [style.width]="getQuantityPercentage()"
+           attr.aria-valuenow="{{quantity}}"
+           attr.aria-valuemin="0"
+           attr.aria-valuemax="{{quantityTotal}}">
+      </div>
+    </div>
+  </div>
+</div>

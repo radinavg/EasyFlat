@@ -1,0 +1,38 @@
+<div class="modal fade" id="createExpenseFromShopModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel">Create Expense</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="expense-title" class="col-form-label">Title<span style="color: red">*</span></label>
+          <input type="text"
+                 class="form-control"
+                 id="expense-title"
+                 placeholder="e.g. Groceries"
+                 aria-describedby="expenseTitleHelp"
+                 required
+                 [(ngModel)]="newExpenseTitle">
+          <small id="expenseTitleHelp" class="form-text text-muted">The title of the expense that will be shown in finance.</small>
+        </div>
+        <div class="mb-3">
+          <label for="expense-price" class="col-form-label">Price<span style="color: red">*</span></label>
+          <input type="number"
+                 class="form-control"
+                 id="expense-price"
+                 placeholder="e.g 15"
+                 aria-describedby="expensePriceHelp"
+                 required
+                 [(ngModel)]="newExpensePrice">
+          <small id="expensePriceHelp" class="form-text text-muted">The cost of all checked items.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="createExpense()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>

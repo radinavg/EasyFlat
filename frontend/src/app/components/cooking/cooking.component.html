@@ -1,0 +1,86 @@
+<ng-container *ngIf="empty && !isLoading" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+  <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="text-center">
+      <h1 class="display-4">Cooking Suggestions</h1>
+      <div style="width: 100%; height: 1px; background-color: black; margin: 1rem 0;"></div>
+      <div class="row row-cols-4">
+      </div>
+      <div class="ms-1">
+        <label for="fillLevel" class="col-form-label">
+          Type
+        </label>
+        <select id="fillLevel" name="fillLevel"
+                class="form-select" [(ngModel)]="type"
+
+        >
+          <option value="all types">all types</option>
+          <option value="breakfast">breakfast</option>
+          <option value="main dish">main dish</option>
+          <option value="side dish">side dish</option>
+
+
+        </select>
+      </div>
+      <button (click)="reloadRecipes();" *ngIf="empty " class="btn btn-primary btn-lg mt-3 py-2 px-4 rounded-pill"
+              [disabled]="isLoading">
+        Suggest New Recipe
+      </button>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-container *ngIf="isLoading">
+  <div class="d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class=" spinner-border text-primary" role="status">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!empty">
+
+  <!-- Displayed when empty is false -->
+  <h1 class="display-4">Cooking Suggestions</h1>
+  <div style="width: 100%; height: 100%; border: 1px black solid"></div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="col">
+      <button type="button"
+              class="btn btn-secondary float-end m-3"
+              (click)="makeEmptyTrue()">
+        <i class="bi-arrow-left"></i>
+        Back
+      </button>
+      <button type="button"
+              class="btn btn-success float-end m-3"
+              (click)="reloadRecipes()">
+        Suggest New Recipes
+      </button>
+    </div>
+  </div>
+  <div>
+    <div *ngIf="recipes.length === 0" style="text-align: center; margin-top: 20px">
+      <h3>No recipes matching the selected type '{{type}}' were found.</h3>
+    </div>
+  </div>
+
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 ">
+    <div class="col" *ngFor="let recipe of recipes" style="margin-right: 2.5rem; margin-bottom: 2rem;">
+      <app-recipe-card [recipe]="recipe"
+                       (recipeAddedToCookbook)="handleRecipeAddedToCookbook($event)"
+                       (cookClicked)="openRecipeModal($event)"
+                       (detailsClicked)="openDetailModal($event)"
+      >
+      </app-recipe-card>
+    </div>
+
+
+  </div>
+
+</ng-container>
+
+
+
+

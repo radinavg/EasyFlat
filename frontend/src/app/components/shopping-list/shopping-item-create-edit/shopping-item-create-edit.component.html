@@ -1,0 +1,158 @@
+<div class="container">
+
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h1 class="display-4">{{ heading }}</h1>
+    </div>
+    <div class="col mt-4 text-end">
+      <button type="submit"
+              class="btn btn-secondary ms-auto me-2 bi-ban"
+              [routerLink]="['/shopping-lists/list/' + item.shoppingList.id]"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="custom-header-border"></div>
+
+  <form #form="ngForm" (keydown.enter)="$event.preventDefault()" (submit)="onSubmit(form)">
+
+    <div class="col-md-5 mb-3 mt-3 col-lg-auto text-end">
+      <button type="submit"
+              class="btn btn-primary me-2"
+      >
+        <i class="bi" [class.bi-plus-square]="modeIsCreate" [class.bi-pencil]="!modeIsCreate"></i>
+        {{ submitButtonText }}
+      </button>
+    </div>
+
+    <div class="row row-cols-1">
+
+      <div class="row p-2">
+        <label for="productName"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Product Name<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="productName"
+                 name="productName"
+                 [(ngModel)]="item.productName"
+                 >
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="generalName"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Category<span style="color: red">*</span>
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="generalName"
+                 name="generalName"
+                 placeholder="e.g. fruit"
+                 [(ngModel)]="item.generalName"
+                 >
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="totalQuantityAndUnit"
+               class="col-form-label text-muted col-md-2 col-lg-4 mt-2"
+        >
+          Quantity<span style="color: red">*</span>
+        </label>
+        <div class="col-md-8 col-lg-5 mt-2">
+          <input type="number"
+                 class="form-control"
+                 id="totalQuantityAndUnit"
+                 name="totalQuantityAndUnit"
+                 [(ngModel)]="item.quantityTotal"
+                 >
+        </div>
+        <div class="col-md-2 col-lg-2 mt-2">
+          <select class="form-select form-select-md"
+                  name="unit"
+                  [(ngModel)]="item.unit"
+                  [compareWith]="compareUnitObjects">
+            <option *ngFor="let unit of availableUnits"
+                    [ngValue]="unit">
+              {{formatUnitName(unit)}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="brand"
+               class="col-form-label text-muted col-md-2 col-lg-4"
+        >
+          Brand
+        </label>
+        <div class="col-md-10 col-lg-8">
+          <input type="text"
+                 class="form-control"
+                 id="brand"
+                 name="brand"
+                 [(ngModel)]="item.brand">
+        </div>
+      </div>
+
+      <div class="row p-2">
+        <label for="labels" class="col-form-label text-muted col-md-2 col-lg-4">
+          Labels
+        </label>
+        <div class="col-md-10 col-lg-8" id="labels">
+
+    <span *ngFor="let labelDto of item.labels; let i = index" class="p-2">
+      <div class="border-bottom pb-3 pt-2" [style.color]="labelDto.labelColour" style="font-weight: bold">
+
+        <button type="button"
+                class="btn btn-outline-danger float-end"
+                (click)="removeLabel(i)">
+          <i class="bi bi-trash"></i>
+        </button>
+
+        {{labelDto.labelValue}}
+      </div>
+    </span>
+          <div class="row align-items-center">
+
+            <div class="col-auto">
+              <button type="button"
+                      class="btn btn-light"
+                      [(colorPicker)]="selectedLabelColor"
+                      [style.background]="selectedLabelColor">
+                <i class="bi bi-palette"></i>
+              </button>
+            </div>
+
+            <div class="col-auto">
+              <input type="text"
+                     class="form-control"
+                     placeholder="Label"
+                     #labelInput>
+            </div>
+            <div class="col-auto">
+              <button type="button"
+                      class="btn btn-primary"
+                      (click)="addLabel(labelInput.value, selectedLabelColor); labelInput.value = ''; labelInput.focus(); selectedLabelColor = '#ffffff'">
+                <i class="bi bi-plus-square"></i>
+              </button>
+            </div>
+
+          </div>
+          <small id="pointsHelp" class="form-text text-muted">You can add up to three labels.</small>
+
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+

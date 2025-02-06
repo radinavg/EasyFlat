@@ -1,0 +1,117 @@
+<h1 class="display-4">All Chores</h1>
+<div class="custom-header-border"></div>
+
+<form class="d-flex flex-row w-auto mb-3">
+  <button type="submit" hidden="hidden">submit</button>
+
+  <div class="flex-grow-1">
+    <label for="searchChore" class="col-form-label">
+      Responsible Person
+    </label>
+    <input type="text" id="searchChore"
+           name="searchChore"
+           class="form-control"
+           [(ngModel)]="searchParams.userName"
+           (ngModelChange)="loadChores()"
+    >
+  </div>
+
+  <div class="ms-1">
+    <label for="searchChoreLatestDeadline" class="col-form-label">
+      Do Before
+    </label>
+    <input type="date" id="searchChoreLatestDeadline" name="searchChoreLatestDeadline"
+           pattern="\d{4}-\d{2}-\d{2}"
+           placeholder="yyyy-mm-dd"
+           class="form-control"
+           [(ngModel)]="searchParams.endDate"
+           (ngModelChange)="loadChores()"
+    >
+  </div>
+
+  <div class="ms-1">
+    <label class="col-form-label">
+      Actions
+    </label>
+    <div>
+      <button *ngIf="chores?.length > 0"
+              class="btn btn-secondary" style="margin-right: 4px;" (click)="exportPDF()">
+        Export PDF
+      </button>
+      <button *ngIf="unassigned?.length > 0"
+              class="btn btn-primary" style="margin-right: 4px;" (click)="assignChores()">
+        Assign Chores
+      </button>
+      <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToMyChores()">
+        My Chores
+      </button>
+      <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToPreference()">
+        Preference
+      </button>
+      <button class="btn btn-warning" style="margin-right: 4px;" (click)="navigateToLeaderboard()">
+        Leaderboard
+      </button>
+    </div>
+
+  </div>
+
+</form>
+
+<div class="text-end">
+  <button type="button"
+          class="btn btn-primary"
+          (click)="navigateToNewChore()">
+    <i class="bi bi-plus-square"></i>
+    Add Chore
+  </button>
+</div>
+
+<div style="width: 100%; margin-top: 20px" *ngIf="assigned.length > 0">
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h2 class="display-5">Assigned Chores</h2>
+    </div>
+  </div>
+
+  <div class="row row-cols-4">
+    <div style="margin-bottom: 20px;" class="col" *ngFor="let chore of assigned">
+      <a style="text-decoration: none">
+        <app-chore-card [name]="chore.name"
+                        [description]="chore.description"
+                        [endDate]="chore.endDate"
+                        [points]="chore.points"
+                        [user]="chore.user ? chore.user.firstName + ' ' + chore.user.lastName : ''"
+                        [mode]=0>
+        </app-chore-card>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div style="width: 100%; margin-top: 20px" *ngIf="unassigned.length > 0">
+  <div class="row mb-2 mb-md-0">
+    <div class="col col-9">
+      <h2 class="display-5">Unassigned Chores</h2>
+    </div>
+  </div>
+  <div class="row row-cols-4">
+    <div style="margin-bottom: 20px;" class="col" *ngFor="let chore of unassigned">
+      <a style="text-decoration: none">
+        <app-chore-card [name]="chore.name"
+                        [description]="chore.description"
+                        [endDate]="chore.endDate"
+                        [points]="chore.points"
+                        [mode]=0>
+        </app-chore-card>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="chores?.length === 0" style="text-align: center;">
+  <h3>No chores found!</h3>
+</div>
+
+
+

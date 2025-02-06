@@ -1,0 +1,107 @@
+<div class="jumbotron mt-5 text-center" xmlns="http://www.w3.org/1999/html">
+  <h1 *ngIf="!authService.isLoggedIn()" class="display-4">Welcome to EasyFlat!</h1>
+  <h1 *ngIf="authService.isLoggedIn()" class="display-4">Welcome to EasyFlat, {{user.firstName}}!</h1>
+  <hr class="my-4">
+
+  <div *ngIf="!authService.isLoggedIn()" class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="card mx-auto mb-3">
+          <div class="card-header text-black">
+            <h5 class="card-title">Login as an existing user</h5>
+          </div>
+          <div class="card-body">
+            <p data-cy="not-logged-in-login" class="btn btn-primary btn-lg btn-block" routerLink="/login" role="button">Login</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mx-auto">
+          <div class="card-header text-black">
+            <h5 class="card-title">Register as a new user</h5>
+          </div>
+          <div class="card-body">
+            <p data-cy="not-logged-in-register" class="btn btn-primary btn-lg btn-block" routerLink="/register" role="button">Register</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="authService.isLoggedIn()&&!isLoggedWg()">
+    <div class="form-group">
+      <h3>Join or Create a Shared Flat</h3>
+      <div class="button-group">
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" routerLink="/wgLogin" role="button">Join</a>
+        </p>
+        <p class="lead">
+          <a class="btn btn-primary btn-lg" routerLink="/wgCreate" role="button">Create</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="authService.isLoggedIn()&&isLoggedWg()">
+    <h2>Discover the joy of living together at {{user.flatName}}!</h2>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2">
+      <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/account" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"> <span class="bi bi-person-circle ml-2"></span> <strong> Account</strong>  </div>
+          </div>
+        </a>
+      </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/digital-storage" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-archive ml-2"></span> <strong> Digital Storage</strong> </div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/shopping-lists" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-cart3 ml-2"></span><strong> Shopping Lists</strong> </div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/cooking" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-search-heart ml-2"></span><strong> Cooking Suggestions </strong> </div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/cookbook" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-book ml-2"></span><strong>  Cookbook </strong></div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/chores/all" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-award ml-2"></span> <strong> Chores </strong> </div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/events" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-calendar3 ml-2"></span> <strong> Events </strong> </div>
+          </div>
+        </a>
+        </div>
+        <div class="mb-3" >
+        <a style="text-decoration: none" routerLink="/finance" aria-label="Go to account">
+          <div class="card mt-3 h-100 custom-card" >
+            <div class="card-body"><span class="bi bi-cash-stack ml-2"></span> <strong> Finance </strong> </div>
+          </div>
+        </a>
+        </div>
+    </div>
+  </div>
+</div>
+<br>
+

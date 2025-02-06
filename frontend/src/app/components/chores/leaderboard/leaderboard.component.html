@@ -1,0 +1,44 @@
+<h1 class="display-4">Leaderboard</h1>
+<div class="custom-header-border"></div>
+
+<div class="ms-1">
+  <label class="col-form-label">
+    Actions
+  </label>
+  <div>
+    <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToAllChores()">
+      All Chores
+    </button>
+    <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToMyChores()">
+      MyChores
+    </button>
+    <button class="btn btn-primary" style="margin-right: 4px;" (click)="navigateToPreference()">
+      Preference
+    </button>
+  </div>
+</div>
+
+<div class="leaderboard-container">
+  <div class="total-points display-4">Total Points: {{ totalPoints }}</div>
+  <ng-container *ngFor="let group of groupedUsers; let i = index">
+    <mat-card class="leaderboard-card">
+      <mat-card-content>
+        <div class="group-header">
+          <span [ngStyle]="getRowNumberStyle(i + 1)" class="row-number">{{ i + 1 }}</span>
+          <div class="points">{{ group.points }} points{{ group.users.length > 1 ? ' (each)' : '' }}</div>
+        </div>
+        <mat-list-item class="user-list-item">
+          <div class="user-names">
+            <div style="font-weight: bold" *ngIf="group.users">
+              <ng-container *ngFor="let user of group.users; let isLast = last">
+                {{ user?.firstName }} {{ user?.lastName }}{{ isLast ? '' : ',' }}
+              </ng-container>
+            </div>
+          </div>
+        </mat-list-item>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</div>
+
+

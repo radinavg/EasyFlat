@@ -1,0 +1,165 @@
+<div class="row">
+  <div class="col col-8">
+    <h1 class="display-4">Expenses Overview</h1>
+  </div>
+  <div class="custom-header-border"></div>
+  <div class="w-100 col col-4 mt-4 text-end">
+    <button type="button"
+            class="btn btn-primary me-0 me-md-2 mb-1 mb-md-0"
+            [routerLink]="['/expense/create']">
+      <i class="bi bi-plus-square"></i>
+      New Expense
+    </button>
+    <button type="button" class="btn btn-secondary" [routerLink]="['/finance']">
+      <i class="bi bi-arrow-left"></i>
+      Back
+    </button>
+  </div>
+</div>
+
+<form class="d-flex flex-row w-auto mb-3" (submit)="reloadExpenses()">
+  <!-- this button is here, just so that simple submitting of this form
+       to reload the expenses, is possible -->
+  <button type="submit" hidden="hidden">submit</button>
+  <div class="flex-grow-1">
+    <label for="searchExpenseTitle" class="col-form-label">
+      Title
+    </label>
+    <input type="text" id="searchExpenseTitle" name="searchExpenseTitle"
+           class="form-control"
+           [(ngModel)]="searchParams.title"
+           (ngModelChange)="searchChanged()"
+    >
+  </div>
+  <div class="ms-1">
+    <label for="searchExpensePaidBy" class="col-form-label">
+      Paid By
+    </label>
+    <select class="form-select"
+            aria-label="Dropdown of users in the flat"
+            id="searchExpensePaidBy"
+            name="searchExpensePaidBy"
+            [(ngModel)]="searchParams.paidBy"
+            (ngModelChange)="searchChanged()"
+    >
+      <option [ngValue]=undefined>Any User</option>
+      <option *ngFor="let user of users"
+              [ngValue]="user">
+        {{ user.firstName + ' ' + user.lastName }}
+      </option>
+    </select>
+  </div>
+  <div class="ms-1">
+    <label for="searchMinExpenseAmount" class="col-form-label">
+      Minimum Amount
+    </label>
+    <input type="number" id="searchMinExpenseAmount" name="searchMinExpenseAmount"
+           class="form-control"
+           min="0"
+           max="10000"
+           [(ngModel)]="searchParams.minAmountInEuro"
+           (ngModelChange)="searchChanged()"
+    >
+  </div>
+  <div class="ms-1">
+    <label for="searchMaxExpenseAmount" class="col-form-label">
+      Maximum Amount
+    </label>
+    <input type="number" id="searchMaxExpenseAmount" name="searchMaxExpenseAmount"
+           class="form-control"
+           min="0"
+           max="10000"
+           [(ngModel)]="searchParams.maxAmountInEuro"
+           (ngModelChange)="searchChanged()"
+    >
+  </div>
+  <div class="ms-1">
+    <label for="searchFromExpenseCreatedAt" class="col-form-label">
+      From Date
+    </label>
+    <input type="date" id="searchFromExpenseCreatedAt" name="searchFromExpenseCreatedAt"
+           pattern="\d{4}-\d{2}-\d{2}"
+           placeholder="yyyy-mm-dd"
+           class="form-control"
+           [(ngModel)]="searchFromDate"
+           (ngModelChange)="searchChanged()"
+    >
+  </div>
+  <div class="ms-1">
+    <label for="searchToExpenseCreatedAt" class="col-form-label">
+      To Date
+    </label>
+    <input type="date" id="searchToExpenseCreatedAt" name="searchToExpenseCreatedAt"
+           pattern="\d{4}-\d{2}-\d{2}"
+           placeholder="yyyy-mm-dd"
+           class="form-control"
+           [(ngModel)]="searchToDate"
+           (ngModelChange)="searchChanged()"
+    >
+  </div>
+</form>
+
+<div *ngIf="expenses.length > 0" class="mt-3 table-responsive">
+  <table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col" class="d-none d-md-table-cell">Paid by</th>
+      <th scope="col">Amount</th>
+      <th scope="col" class="d-none d-md-table-cell">Date</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let expense of expenses" class="center-td">
+      <td>{{ expense.title }} <span *ngIf="expense.addedViaStorage" class="badge bg-success">Added by System</span></td>
+      <td class="d-none d-md-table-cell">{{ expense.paidBy.firstName }} {{ expense.paidBy.lastName }}</td>
+      <td>
+        {{ (expense.amountInCents / 100).toFixed(2) }} €
+      </td>
+      <td class="d-none d-md-table-cell">
+        {{ expense.createdAt | date:'MMM dd, yyyy HH:mm' }}
+      </td>
+      <td>
+        <app-confirm-delete-dialog
+          [deleteInfo]="'expense'"
+          [deleteName]="expense.title !== null ? expense.title : ''"
+          [deleteId]="expense.id !== null ? expense.id.toString() : null"
+          (confirm)="delete(expense)">
+        </app-confirm-delete-dialog>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-primary"
+                  [routerLink]="['/expense', expense.id, 'detail']"
+                  aria-label="Show expense details"
+                  toggel-data="tooltip"
+                  title="Show expense details"
+          >
+            <i class="bi bi-info-lg"></i>
+          </button>
+          <button class="btn btn-sm btn-warning"
+                  [routerLink]="['/expense', expense.id, 'edit']"
+                  aria-label="Edit expense"
+                  toggel-data="tooltip"
+                  title="Edit expense"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button type="button"
+                  class="btn btn-sm btn-danger"
+                  data-bs-toggle="modal"
+                  [attr.data-bs-target]="'#confirm-delete-modal' + getIdFormatForDeleteModal(expense)"
+                  aria-label="Delete expense"
+                  toggel-data="tooltip"
+                  title="Delete expense"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<h3 *ngIf="expenses.length <= 0" class="d-flex justify-content-center mt-5">
+  No expenses found!
+</h3>

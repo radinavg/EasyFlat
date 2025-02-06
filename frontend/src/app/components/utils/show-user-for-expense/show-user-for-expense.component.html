@@ -1,0 +1,25 @@
+<div *ngFor="let user of users; let i = index"
+     class="row w-75 p-2 align-items-center align-content-center border rounded m-1">
+  <div class="form-check col-2">
+    <input class="form-check-input"
+           type="checkbox"
+           id="target"
+           [(ngModel)]="selectedUsers[i]"
+           (change)="adaptedToChange()">
+  </div>
+  <div class="col-4">
+    {{user.user.firstName + " " + user.user.lastName}}
+  </div>
+  <div class="col-2 text-end">
+    {{determineValueRepresentation(user)}}
+  </div>
+  <div class="col-4">
+    <input type="number"
+           class="form-control"
+           aria-label="value"
+           [(ngModel)]="user.value"
+           [disabled]="!selectedUsers[i] || splitBy === SplitBy.EQUAL"
+    >
+  </div>
+</div>
+

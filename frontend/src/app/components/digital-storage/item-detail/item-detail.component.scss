@@ -1,0 +1,12 @@
+/* Custom style for disabled toggle */
+.form-check-input:disabled {
+  opacity: 1; /* Override the default opacity */
+}
+
+.product-detail-border {
+  border: 1px black solid;
+}
+
+.odd-detail {
+  background-color: #F5F5F5;
+}

@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <h4 class="modal-title">Select New Admin</h4>
+  <button type="button" class="btn btn-close" (click)="activeModal.dismiss()" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+  <label>You have to choose someone to be the next admin of the shared flat</label>
+  <br>
+  <select class="form-control" [(ngModel)]="selectedUser">
+    <option *ngFor="let user of users" [value]="user.id">{{ user.email }}</option>
+  </select>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="confirmAdminSelection()">Confirm</button>
+</div>

@@ -1,0 +1,17 @@
+<div class="btn-group"
+     role="group"
+     aria-label="Basic example"
+>
+  <button *ngFor="let option of options"
+          type="button"
+          [ngClass]="{
+            'btn': true,
+            'btn-secondary': bindingObject !== option.value,
+            'btn-primary': bindingObject === option.value
+          }"
+          [value]="option.value"
+          (click)="onBindingObjectChange(option.value)"
+  >
+    {{ option.label}}
+  </button>
+</div>

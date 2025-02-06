@@ -1,0 +1,40 @@
+<div class="card mt-3" style="width: 20rem; height: 16rem">
+  <div class="card-header text-black">
+    <div class="row">
+      <h5 class="card-title">{{getTruncated(recipe.title, 23)}}</h5>
+    </div>
+  </div>
+  <!--  </div>-->
+  <div class="card-body">
+    <div style="height: 6rem">
+      <p [innerHTML]=" getTruncated(recipe.summary,100)">
+      </p>
+    </div>
+    <div class="row" style="height: 2rem">
+      <div class="col-6  ">
+        <b>Servings: {{recipe.servings}}</b>
+      </div>
+      <div class="col-6  ">
+        <b>Time: {{recipe.readyInMinutes}}min.</b>
+      </div>
+    </div>
+
+
+    <div class="row justify-content-center ">
+
+
+      <div class="col-4 mb-2 ">
+        <button class="btn btn-info " (click)="addToCookBook()" [disabled]="isSaveButtonDisabled">Save</button>
+      </div>
+      <div class="col-4 mb-2 ">
+        <button class="btn btn-outline-secondary" (click)="showDetails()">Detail</button>
+      </div>
+      <div class="col-4 mb-2">
+        <button class="btn btn-success" (click)="cook()"
+                ngbTooltip="Cooking this recipe will deduct the corresponding quantities from your storage items.">Cook
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
